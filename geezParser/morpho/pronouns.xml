@@ -1,0 +1,53 @@
+<pronouns xmlns="http://fidal.parser">
+    <group name="demonstrative">
+        <type name="nominative">
+        <num type="Singular">
+                <gender type="Masculine">
+                    <proclitic>ዝ</proclitic>
+                    <full>ዝንቱ</full>
+                </gender>
+                <gender type="Feminine">
+                    <proclitic>ዛ</proclitic>
+                    <full>ዛቲ</full>
+                </gender>
+        </num>
+        <num type="Plural">
+            
+                <gender type="Masculine">
+                    <full>እሉ</full>
+                    <full>እሎንቱ</full>
+                </gender>
+                <gender type="Feminine">
+                    <full>እላ</full>
+                    <full>እላንቱ</full>
+                </gender>
+            
+        </num>
+    </type>
+        <type name="akkusative">
+            <num type="Singular">
+                <gender type="Masculine">
+                    <proclitic>ዘ</proclitic>
+                    <full>ዘንተ</full>
+                </gender>
+                <gender type="Feminine">
+                    <proclitic>ዛ</proclitic>
+                    <full>ዛተ</full>
+                </gender>
+            </num>
+            <num type="Plural">
+                
+                <gender type="Masculine">
+                    <full>እሉ</full>
+                    <full>እሎንተ</full>
+                </gender>
+                <gender type="Feminine">
+                    <full>እላ</full>
+                    <full>እላንተ</full>
+                </gender>
+                
+            </num>
+        </type>
+    </group>
+
+</pronouns>
