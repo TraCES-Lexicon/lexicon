@@ -649,6 +649,135 @@ $formtext
 };
 
 
+(:~
+ : lists all available patterns
+ :)
+declare
+%rest:GET
+%rest:path("/morpho/patterns")
+%output:method("html")
+function morpho:morphoPatterns(){
+<html>
+<head>
+<meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   
+<title>Available patterns</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</link>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+<body>
+<div class="col-md-12"><h1>Morphological Parser (alpha)</h1></div>
+<div class="col-md-12">
+{for $formula in ($morpho:patterns, $morpho:nominal)//f:formula
+return
+<div class="col-md-12">
+<div class="col-md-3">{if($formula/@attested)then attribute style {'color:red;'}else ()}{$formula/text()} {if($formula/@type) then ' ('||string($formula/@type)||')' else ()}</div>
+<div class="col-md-3">{string($formula/parent::f:pattern/@name)}</div>
+<div class="col-md-3">{string($formula/ancestor::f:type/@name)}{' '}{string($formula/ancestor::f:group/@name)}</div>
+<div class="col-md-3">{string($formula/ancestor::f:pos/@name)}</div>
+</div>
+}
+</div>
+</body></html>
+};
+
+
+(:~
+ : lists all available affixes
+ :)
+declare
+%rest:GET
+%rest:path("/morpho/affixes")
+%output:method("html")
+function morpho:morphoAffixes(){
+<html>
+<head>
+<meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   
+<title>Available affixes</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</link>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+<body>
+<div class="col-md-12"><h1>Morphological Parser (alpha)</h1></div>
+<div class="col-md-12">
+{for $affix in ($morpho:nouns, $morpho:conjugations)//f:affix
+return
+<div class="col-md-12">
+<div class="col-md-3">{if($affix/@type) then () else '-'}{$affix/text()}{if($affix/@type) then '-' else ()}</div>
+<div class="col-md-3">{string-join((string($affix/ancestor::f:gender[last()]/@type),string($affix/ancestor::f:person[last()]/@type),string($affix/ancestor::f:num[last()]/@type)), ', ')}</div>
+<div class="col-md-3">{if($affix/ancestor::f:pronouns) then string-join((string($affix/ancestor::f:gender[1]/@type),string($affix/ancestor::f:person[1]/@type),string($affix/ancestor::f:num[1]/@type)), ', ')
+                   else ()}</div>
+<div class="col-md-3">{string($affix/ancestor::f:type[last()]/@name)} ({string($affix/ancestor::f:group[last()]/@name)})</div>
+                     
+</div>
+}
+</div>
+</body></html>
+};
+
+
+(:~
+ : lists all available affixes
+ :)
+declare
+%rest:GET
+%rest:path("/morpho/letters")
+%output:method("html")
+function morpho:morphoLetters(){
+<html>
+<head>
+<meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   
+<title>Fidal</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</link>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+<body>
+<div class="col-md-12"><h1>Morphological Parser (alpha)</h1></div>
+<div class="col-md-12">
+<p>Transcription types</p>
+<table class="table table-responsive">
+<thead>
+<tr><th>type</th>{for $order in 0 to 7 return <th>{string($order)}</th>}</tr>
+</thead>
+<tbody>
+{for $transcription in $morpho:letters//f:transcription[@type]
+return
+<tr><td>{string($transcription/@type)}</td>
+{for $v in $transcription/f:vowel
+return <td>{$v/text()}</td>}
+</tr>
+}</tbody>
+</table>
+<p>Fidal</p>
+<table class="table table-responsive">
+<thead>
+<tr><th>transcription</th>{for $order in 0 to 7 return <th>{string($order)}</th>}</tr>
+</thead>
+<tbody>
+{for $letter in $morpho:letters//f:letter
+return
+<tr><td>{$letter/f:transcription/text()}</td>
+{for $v in $letter//f:realization
+return <td>{$v/text()}</td>}
+</tr>
+}</tbody>
+</table>
+</div>
+</body></html>
+};
+
+
 
 (:~
  : Given lexical item or a string looks in the traces texts for attestations, forms and morphological annotation.
@@ -1282,6 +1411,10 @@ let $matchings := if($maintype = 'fuzzy') then (let $fuzzy := concat($f,'~0.8') 
                                     (:    once the pattern is known, and thus for every matched pattern, the root can be computed, by looking at the pos and for verbs at the third person masculin singular  of the perfect  :) 
                                      let $patterntype := if($match/@type) then string($match/@type) else 'regular'
                                     let $mainRoot := string-join($consVowl//f:char[number(following-sibling::f:position) le 3]/text())
+                                    let $thirdpositionsixthorder := $morpho:letters//f:realization[. = $consVowl//f:syllab[3]/f:firstOrder/text()]/parent::f:realizations/f:realization[1]
+                                    let $lastSixth := string-join(($consVowl//f:char[number(following-sibling::f:position) le 2]/text(),$thirdpositionsixthorder))
+                                    let $otherRoot:=string-join($consVowl//f:char/text())
+                                    let $optionWithoutlast := substring($otherRoot, 0, string-length($otherRoot))
                                      let $roottype := morpho:rootType($mainRoot)
                                      
                                      let $mode := string($match/ancestor::f:pattern/@name)                                             
@@ -1304,9 +1437,14 @@ let $matchings := if($maintype = 'fuzzy') then (let $fuzzy := concat($f,'~0.8') 
                                                 order by $desLength descending
                                                 return $form}</forms>
                                              </solution>
-                                             <roots><mainroots><root>{$mainRoot}</root></mainroots></roots>
+                                             <roots><mainroots><root>{$mainRoot}</root></mainroots>
+                                             <otherroots>
+                                             <root>{$otherRoot}</root>
+                                             <root>{$optionWithoutlast}</root>
+                                             <root>{$lastSixth}</root>
+                                             </otherroots>
+                                             </roots>
                                              </match>
-                                             
                                    else ()
                                    
              let $candidates:= for $cand in $candidates return morpho:checkDill($cand)                      
@@ -1867,13 +2005,13 @@ let $particles := for $cand in $partic
  : The html form with bootstrap used to build the queries in url patterns producing HTML.
  :)
 declare function morpho:form(){
-<form action="{$morpho:baseurl}" class="form">
+(<form action="{$morpho:baseurl}" class="form">
 <div class="form-group">
 <input  class="form-control" name="query" type="search" placeholder="Search string" value="" aria-haspopup="true" role="textbox"/>
 </div>
-<div class="form-group">
+<!--<div class="form-group">
 <input  class="form-control" name="root" type="search" placeholder="Root for Paradigm or Conjugation" value="" aria-haspopup="true" role="textbox"/>
-</div>
+</div>-->
 <div class="form-group">
     <label for="searches">Select Input type</label>
     <select class="form-control" id="fidal" name="fidal">
@@ -1906,7 +2044,23 @@ declare function morpho:form(){
     <label class="form-check-label" for="mismatch">Include mismatches of pattern and root (patterns with W for a root which does not have w.)</label>
   </div>
 <button type="submit" class="btn btn-primary">RUN</button>
-</form>
+</form>,
+<div class="row"></div>,
+<div class="alert alert-info">
+<p>The most important data available to this parser can be seen at the following links</p>
+<ul>
+<li><a target="_blank" href="{$morpho:baseurl}/letters">Letters</a></li>
+<li><a target="_blank" href="{$morpho:baseurl}/affixes">Affixes</a></li>
+<li><a target="_blank" href="{$morpho:baseurl}/patterns">Patterns</a></li>
+</ul>
+<p>Dillmann's Lexicon Linguae Aethiopicae Online, used for data validation can be found <a target="_blank" href="/Dillmann">here.</a> </p>
+<p>This work was carried out for the <a target="_blank" href="https://www.traces.uni-hamburg.de/">TraCES project</a>, Grant Agreement 338756.</p>
+<p>TraCES corpus data was annotated with the GeTa tool (developed by Cristina Vertan) by the <a target="_blank" href="https://www.traces.uni-hamburg.de/en/team.html">project team</a>.</p>
+<p>The code running here is available in the <a target="_blank" href="https://github.com/TraCES-Lexicon/lexicon/tree/master/geezParser">project GitHub repository</a> and was developed by Pietro Liuzzo.</p>
+<p>The application runs as a <a target="_blank" href="http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf">RESTXQ</a> application and is powered by <a herf="http://exist-db.org/exist/apps/homepage/index.html">eXist-db</a>.</p>
+</div>
+)
 };
+
 
     
