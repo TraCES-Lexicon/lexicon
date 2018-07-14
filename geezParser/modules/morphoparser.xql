@@ -122,19 +122,11 @@ let $particles := morpho:particles($q)
 (: verbi       :)
 (:sends 10 queries, one for each schwerer type and one for the regular
 adds also a fuzzy search for eventual 4 or 5 radicals:)
-let $verbtypes:= 
-<verbtypes xmlns="http://fidal.parser">
-{if($fuzzy = 'true') then <type>fuzzy</type> else ()}
-<type>regular</type>
-{for $position in 1 to 3
-for $letter in ('w','y','l')
-return 
-<type>{$letter||$position}</type>}
-</verbtypes>
+
 (:nouns      :)
 let $nouns:= morpho:formulas($chars,$q,$transcriptionType,'noun')
 (:verbs       :)
-let $verbs:= for $type in $verbtypes/f:type/text() return morpho:formulas($chars,$q,$transcriptionType,$type)
+let $verbs:= morpho:formulas($chars,$q,$transcriptionType,'verb')
  
 return
 <results>
@@ -172,12 +164,8 @@ let $chars := functx:chars($q)
 (:verbs       :)
 (:sends 10 queries, one for each schwerer type and one for the regular
 adds also a fuzzy search for eventual 4 or 5 radicals:)
-let $verbtypes:=  <verbtypes xmlns="http://fidal.parser">
-                                        {if($fuzzy = 'true') then <type>fuzzy</type> else ()}
-                                        <type>regular</type>
-                                            {for $position in 1 to 3    for $letter in ('w','y','l')    return <type>{$letter||$position}</type>}
-                                    </verbtypes>
-let $verbs:= for $type in $verbtypes/f:type/text() return morpho:formulas($chars,$q,$transcriptionType,$type)
+
+let $verbs:= morpho:formulas($chars,$q,$transcriptionType,'verb')
 let $selection := morpho:selection($verbs, $fuzzy, $NoDil, $mismatch)
 
 
@@ -310,20 +298,11 @@ let $particles := morpho:particles($q)
 (: verbs       :)
 (:sends 10 queries, one for each schwerer type and one for the regular
 adds also a fuzzy search for eventual 4 or 5 radicals:)
-let $verbtypes:= 
-<verbtypes xmlns="http://fidal.parser">
-{if($fuzzy = 'true') then <type>fuzzy</type> else ()}
-<type>regular</type>
-{for $position in 1 to 3
-for $letter in ('w','y','l')
-return 
-<type>{$letter||$position}</type>}
-</verbtypes>
 
 (:nouns      :)
 let $nouns:= morpho:formulas($chars,$q,$transcriptionType,'noun')
 (:verbs       :)
-let $verbs:= for $type in $verbtypes/f:type/text() return morpho:formulas($chars,$q,$transcriptionType,$type)
+let $verbs:= morpho:formulas($chars,$q,$transcriptionType,'verb')
 let $selection := morpho:selection($verbs, $fuzzy, $NoDil, $mismatch)
 let $selectionN := morpho:selection($nouns, $fuzzy, $NoDil, $mismatch)
 let $selectionP := morpho:selection($particles, $fuzzy, $NoDil, $mismatch)
@@ -358,8 +337,8 @@ return
     <tr>
     <td>{if($verb//f:pattern[@attested='no']) then attribute style {'color:red;'} else ()}{string-join($verb//f:solution/f:*/text(), ' ')} ({$verb//f:pattern/text()})</td>
        <td>{for $desinence in $verb//f:solution/f:forms/f:desinence return
-                               (('-'||string-join($desinence/f:*[not(name()='length')]/text(), ' ') || (if($desinence/f:pronouns) then (' with object suffix: ' || string-join($desinence/f:pronouns/f:*[not(name()='length')]/text(), ' ')) else ())),<br/>)
-                             }
+                              (('-'||string-join($desinence/f:*[not(name()='length')]/text(), ' ') || (if($desinence/f:pronouns) then (' with object suffix: ' || string-join($desinence/f:pronouns/f:*[not(name()='length')]/text(), ' ')) else ())),<br/>)
+                              }
         </td>
     <td>{for $l  in $verb/f:link return 
                 (<a  target="_blank">{$l/@href, $l/text()}</a>,<br/>)}
@@ -1172,12 +1151,20 @@ declare function morpho:rootType($mainRoot){
 declare function morpho:matches($allformulas, $transcriptionType,$consVowl, $maintype, $possibleDesinences){
 for $f in distinct-values($allformulas)
 let $matchings := if($maintype = 'fuzzy') then (let $fuzzy := concat($f,'~0.8') return $morpho:patterns//f:formula[ft:query(., $fuzzy)]) else $morpho:patterns//f:formula[. = $f]
- let $candidates:=  if(count($matchings) ge 1) then 
+let $verbtypes:= <verbtypes xmlns="http://fidal.parser">
+                                                                            <type>regular</type>
+                                                                                        {for $position in 1 to 3
+                                                                                          for $letter in ('w','y','l')
+                                                                                                    return 
+                                                                              <type>{$letter||$position}</type>}
+                                                                      </verbtypes>
+let $candidates:=  if(count($matchings) ge 1) then 
                                     for $match in $matchings
+                                    for $verbtype in $verbtypes/f:type/text()
                                     (:    once the pattern is known, and thus for every matched pattern, the root can be computed, by looking at the pos and for verbs at the third person masculin singular  of the perfect  :) 
                                      let $typ := string($match/parent::f:pattern/parent::f:type/@name)
                                      let $type := if($typ = '2' or $typ = '3') then '1a' else $typ
-                                     let $Roots :=morpho:listroots($match, $maintype, $consVowl, $transcriptionType, $type, $f)
+                                     let $Roots :=morpho:listroots($match, $verbtype, $consVowl, $transcriptionType, $type, $f)
                                      let $rootlength :=3 + count($consVowl/f:prefix)
                                     let $mainRoot := $Roots//f:mainroots/f:root/text()   
                                     let $roottype := morpho:rootType($mainRoot)
@@ -1661,8 +1648,8 @@ for $affix in $targetpatterns//f:affix[not(@type='pre')]
 (:~ 
 : given a starting formula does several replacements to build candidates for each of the W, Y and L verb forms
 :)
-declare function morpho:schwacher($formula, $letter){
-
+declare function morpho:schwacher($base, $letter){
+for $formula in $base return
 let  $formulaW1 :=if(contains($formula, '1')) then  replace($formula, '1', $letter) else $formula
 
 let  $formulaW2 :=if(contains($formula, '2')) then  replace($formula, '2', $letter) else $formula
@@ -1690,30 +1677,38 @@ let $consVowl :=  morpho:parseChars($chars,$query,$type)
 let $possibleDesinences := morpho:desinences($consVowl, $transcriptionType, $type)
                                                     
 let $formula := morpho:formula($consVowl,$transcriptionType)
-
-(:all:)
-let  $formulaGem := replace($formula, '2', '22')
-let  $formulaGem1 :=if(contains($formula, '1')) then  replace($formula, '1', '11') else $formula
-let  $formulaGem1and2 := if(contains($formulaGem1, '2')) then replace($formulaGem1, '2', '22') else $formulaGem1
-let  $formulaGem3 := if(contains($formula, '3')) then replace($formula, '3', '33') else $formula
-let $formula := if(contains($formula, '4')) then
+let $origForm := $formula
+let $short := if(contains($formula, '4')) then
                                     let $shortened := substring-before($formula, '4')
                                     return if(ends-with($shortened, 'ǝ')) then replace($shortened, 'ǝ', 'a') else $shortened
                                 else $formula
-(:verbs:)
-let $formulaT := if(starts-with($formula, 'yǝ1ǝ') and $type!='noun') then ($formula => replace('1ǝ', 't')=>replace('2', '1')=>replace('3', '2')=>replace('4', '3')) else $formula
-let  $formulaLongA :=  if($type='noun') then () else replace($formula, 'ā', 'a')
-let  $formulaU :=  if($type='noun') then () else   replace($formula, 'u', 'a')
-let  $formulaI := if($type='noun') then () else replace($formula, 'i', 'a') 
-let  $formulashortW :=if(contains($formula, '1') and $type!='noun') then  replace($formula, '1', 'y') else $formula
 
-let $schwache := if($type='noun') then (morpho:schwacher($formula, 'L'))  else  (for $letter in ('W', 'L', 'Y') return morpho:schwacher($formula, $letter))
+let $short := if(starts-with($short, 'tǝ') and $type!='noun') then ($short => replace('tǝ', 'yǝ')) else $short
+let $short := if(starts-with($short, 'nǝ') and $type!='noun') then ($short => replace('nǝ', 'yǝ')) else $short                              
+
+let $base := $short
+(:all:)
+let  $formulaGem := for $f in $base return replace($f, '2', '22')
+let  $formulaGem1 :=for $f in $base  return if(contains($f, '1')) then  replace($f, '1', '11') else $f
+let  $formulaGem1and2 := for $f in $formulaGem1 return if(contains($f, '2')) then replace($f, '2', '22') else $f
+let  $formulaGem3 := for $f in $base return if(contains($f, '3')) then replace($f, '3', '33') else $f
+
+(:verbs:)
+let $formulaT := if(starts-with($short, 'yǝ1ǝ') and $type!='noun') then ($short => replace('1ǝ', 't')=>replace('2', '1')=>replace('3', '2')=>replace('4', '3')) else $short
+let  $formulaLongA :=  if($type='noun') then () else replace($short, 'ā', 'a')
+let  $formulaU :=  if($type='noun') then () else   replace($short, 'u', 'a')
+let  $formulaI := if($type='noun') then () else replace($short, 'i', 'a') 
+let  $formulashortW :=if(contains($formula, '1') and $type!='noun') then  replace($short, '1', 'y') else $short
+
+
+let $schwache := if($type='noun') then (morpho:schwacher($short, 'L'))  else  (for $letter in ('W', 'L', 'Y') return morpho:schwacher($base, $letter))
 
 (:nouns:)
 let $formulaN := if($type='noun') then replace($formula, '4', 'nn') else ()
-let $formulaLshort:= if($type='noun') then (for $s in $schwache return  substring($s, 0, string-length($s))) else ()
+let $formulaLshort:= if($type='noun') then (for $s in ($schwache, $base) return  substring($s, 0, string-length($s))) else ()
 
-let $allformulas:= for $forms in (
+
+let $all :=  (
 $formulashortW,
 $formula,
 $formulaLshort,
@@ -1726,11 +1721,16 @@ $formulaGem,
 $formulaGem1,
 $formulaGem1and2,
 $formulaGem3, 
-$schwache) return morpho:shva($forms)
+$schwache)    
 
+let $formulaLshort:= for $s in $all return  substring($s, 0, string-length($s))
 
-let $matches := if($type='noun') then (morpho:matchesNouns($allformulas,$transcriptionType,$consVowl, $type, $possibleDesinences)) 
-else morpho:matches($allformulas,$transcriptionType,$consVowl, $type, $possibleDesinences)
+let $allformulas:= for $forms in $all return morpho:shva($forms)
+
+let $longAndShort := ($allformulas, $formulaLshort)
+
+let $matches := if($type='noun') then (morpho:matchesNouns($longAndShort,$transcriptionType,$consVowl, $type, $possibleDesinences)) 
+else morpho:matches($longAndShort,$transcriptionType,$consVowl, $type, $possibleDesinences)
                                 
 
 return
@@ -1842,4 +1842,3 @@ declare function morpho:form(){
 <button type="submit" class="btn btn-primary">RUN</button>
 </form>
 };
-    

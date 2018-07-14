@@ -328,12 +328,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwo</affix>
+                                        <affix>ǝwo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwā</affix>
+                                        <affix>ǝwā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -361,12 +361,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwomu</affix>
+                                        <affix>ǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwon</affix>
+                                        <affix>ǝwon</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -477,19 +477,19 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>kəməwo</affix>
+                                        <affix>kǝmǝwo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>kəməwā</affix>
+                                        <affix>kǝmǝwā</affix>
                                     </affixes>
                                 </gender>
                             </person>
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>kəmuni</affix>
+                                        <affix>kǝmuni</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -498,19 +498,19 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>kəməwomu</affix>
+                                        <affix>kǝmǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>kəməwon</affix>
+                                        <affix>kǝmǝwon</affix>
                                     </affixes>
                                 </gender>
                             </person>
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>kəmuna</affix>
+                                        <affix>kǝmuna</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -526,13 +526,13 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>kənāhu</affix>
+                                        <affix>kǝnāhu</affix>
                                         <affix>āhu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>kənāhā</affix>
+                                        <affix>kǝnāhā</affix>
                                         <affix>āhā</affix>
                                     </affixes>
                                 </gender>
@@ -540,7 +540,7 @@
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>kənāni</affix>
+                                        <affix>kǝnāni</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -549,19 +549,19 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>kənāhomu</affix>
+                                        <affix>kǝnāhomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>kənāhon</affix>
+                                        <affix>kǝnāhon</affix>
                                     </affixes>
                                 </gender>
                             </person>
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>kənāna</affix>
+                                        <affix>kǝnāna</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -618,12 +618,12 @@
                             <person type="Second" n="2">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>nākkəmu</affix>
+                                        <affix>nākkǝmu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>nākkən</affix>
+                                        <affix>nākkǝn</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -848,12 +848,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əyo</affix>
+                                        <affix>ǝyo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əyā</affix>
+                                        <affix>ǝyā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -861,7 +861,7 @@
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>ənni</affix>
+                                        <affix>ǝnni</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -870,12 +870,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əyomu</affix>
+                                        <affix>ǝyomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əyon</affix>
+                                        <affix>ǝyon</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -883,7 +883,7 @@
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>əanna</affix>
+                                        <affix>ǝanna</affix>
                                     </affixes>
                                     <!--problem in table?-->
                                 </gender>
@@ -967,12 +967,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwo</affix>
+                                        <affix>ǝwo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwā</affix>
+                                        <affix>ǝwā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1000,12 +1000,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwomu</affix>
+                                        <affix>ǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwon</affix>
+                                        <affix>ǝwon</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1118,12 +1118,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwo</affix>
+                                        <affix>ǝwo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwā</affix>
+                                        <affix>ǝwā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1140,12 +1140,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwomu</affix>
+                                        <affix>ǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwon</affix>
+                                        <affix>ǝwon</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1489,12 +1489,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əyo</affix>
+                                        <affix>ǝyo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əyā</affix>
+                                        <affix>ǝyā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1502,7 +1502,7 @@
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>ənni</affix>
+                                        <affix>ǝnni</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1511,19 +1511,19 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əyomu</affix>
+                                        <affix>ǝyomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əyon</affix>
+                                        <affix>ǝyon</affix>
                                     </affixes>
                                 </gender>
                             </person>
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix>ənna</affix>
+                                        <affix>ǝnna</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1605,12 +1605,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwo</affix>
+                                        <affix>ǝwo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwā</affix>
+                                        <affix>ǝwā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1638,12 +1638,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwomu</affix>
+                                        <affix>ǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwon</affix>
+                                        <affix>ǝwon</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1743,12 +1743,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwo</affix>
+                                        <affix>ǝwo</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwā</affix>
+                                        <affix>ǝwā</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1765,12 +1765,12 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwomu</affix>
+                                        <affix>ǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwon</affix>
+                                        <affix>ǝwon</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1876,12 +1876,12 @@
                             <person type="Second" n="2">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>kəmu</affix>
+                                        <affix>kǝmu</affix>
                                     </affixes>
                                 </gender>
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>kən</affix>
+                                        <affix>kǝn</affix>
                                     </affixes>
                                 </gender>
                             </person>
@@ -1954,13 +1954,13 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əyo</affix>
+                                        <affix>ǝyo</affix>
                                     </affixes>
                                 </gender>
                                 
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əyā</affix>
+                                        <affix>ǝyā</affix>
                                     </affixes>
                                     
                                 </gender>
@@ -1968,7 +1968,7 @@
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix type="gemination">ənni</affix>
+                                        <affix type="gemination">ǝnni</affix>
                                     </affixes>
                                 </gender>                            
                             </person>
@@ -1977,20 +1977,20 @@
                             <person type="Third">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix type="gemination">əyomu</affix>
+                                        <affix type="gemination">ǝyomu</affix>
                                     </affixes>
                                 </gender>
                                 
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix type="gemination">əyon</affix>
+                                        <affix type="gemination">ǝyon</affix>
                                     </affixes>
                                     
                                 </gender></person>
                             <person type="First" n="1">
                                 <gender type="Common">
                                     <affixes>
-                                        <affix type="gemination">ənna</affix>
+                                        <affix type="gemination">ǝnna</affix>
                                     </affixes>
                                 </gender>                            
                             </person>
@@ -2012,13 +2012,13 @@
                             <person type="Third" n="3">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwo</affix>
+                                        <affix>ǝwo</affix>
                                     </affixes>
                                 </gender>
                                 
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwā</affix>
+                                        <affix>ǝwā</affix>
                                     </affixes>
                                     
                                 </gender>
@@ -2035,13 +2035,13 @@
                             <person type="Third">
                                 <gender type="Masculine">
                                     <affixes>
-                                        <affix>əwomu</affix>
+                                        <affix>ǝwomu</affix>
                                     </affixes>
                                 </gender>
                                 
                                 <gender type="Feminine">
                                     <affixes>
-                                        <affix>əwon</affix>
+                                        <affix>ǝwon</affix>
                                     </affixes>
                                     
                                 </gender></person>
