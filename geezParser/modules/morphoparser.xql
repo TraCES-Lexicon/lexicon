@@ -1,6 +1,6 @@
 xquery version "3.1"  encoding "UTF-8";
 
-module namespace morpho="http://betamasaheft.eu/parser/morpho";
+module namespace morpho="http://betamasaheft.eu/DHEth/morpho";
 
 (:~ 
  : XQuery endpoint to parse requests for Geez parsing, paradigms and conjugations. 
@@ -52,7 +52,8 @@ module namespace morpho="http://betamasaheft.eu/parser/morpho";
  :)
 
 import module namespace rest = "http://exquery.org/ns/restxq";
-import module namespace config="http://betamasaheft.eu/parser/config" at "config.xqm";
+import module namespace config="http://betamasaheft.eu/DHEth/config" at "config.xqm";
+import module namespace console="http://exist-db.org/xquery/console";
 
 declare namespace f = "http://fidal.parser";
 declare namespace t = "http://www.tei-c.org/ns/1.0";
@@ -62,8 +63,8 @@ declare namespace http = "http://expath.org/ns/http-client";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace json="http://www.json.org";
 
-declare variable $morpho:collection:='parser';
-declare variable $morpho:baseurl := "/morpho";
+declare variable $morpho:collection:='DHEth';
+declare variable $morpho:baseurl := "http://localhost:8080/exist/restxq/morpho";
 
 declare variable $morpho:data := '/db/apps/'||$morpho:collection||'/morpho/';
 declare variable $morpho:corpus := collection('/db/apps/'||$morpho:collection||'/traces/');
@@ -119,14 +120,10 @@ let $chars := functx:chars($q)
 
 (:particles:)
 let $particles := morpho:particles($q)
-(: verbi       :)
-(:sends 10 queries, one for each schwerer type and one for the regular
-adds also a fuzzy search for eventual 4 or 5 radicals:)
-
 (:nouns      :)
-let $nouns:= morpho:formulas($chars,$q,$transcriptionType,'noun')
+let $nouns:= (morpho:formulas($chars,$q,$transcriptionType,'noun'), if($fuzzy = 'true') then morpho:formulas($chars,$q,$transcriptionType,'fuzzy') else ())
 (:verbs       :)
-let $verbs:= morpho:formulas($chars,$q,$transcriptionType,'verb')
+let $verbs:= (morpho:formulas($chars,$q,$transcriptionType,'verb'), if($fuzzy = 'true') then morpho:formulas($chars,$q,$transcriptionType,'fuzzy') else ())
  
 return
 <results>
@@ -159,19 +156,16 @@ let $query := morpho:cleanQ($query, $fidal, $transcriptionType)
 for $q in $query
 
 let $chars := functx:chars($q)
-
-
-(:verbs       :)
-(:sends 10 queries, one for each schwerer type and one for the regular
-adds also a fuzzy search for eventual 4 or 5 radicals:)
-
-let $verbs:= morpho:formulas($chars,$q,$transcriptionType,'verb')
-let $selection := morpho:selection($verbs, $fuzzy, $NoDil, $mismatch)
-
-
+(:particles:)
+let $particles := morpho:particles($q)
 (:nouns      :)
-let $nouns:= morpho:formulas($chars,$q,$transcriptionType,'noun')
+let $nouns:= (morpho:formulas($chars,$q,$transcriptionType,'noun'), if($fuzzy = 'true') then morpho:formulas($chars,$q,$transcriptionType,'fuzzy') else ())
+(:verbs       :)
+let $verbs:= (morpho:formulas($chars,$q,$transcriptionType,'verb'), if($fuzzy = 'true') then morpho:formulas($chars,$q,$transcriptionType,'fuzzy') else ())
+
+let $selection := morpho:selection($verbs, $fuzzy, $NoDil, $mismatch)
 let $selectionN := morpho:selection($nouns, $fuzzy, $NoDil, $mismatch)
+let $selectionP := morpho:selection($particles, $fuzzy, $NoDil, $mismatch)
 
 let $traces := $morpho:corpus//t:f[.=$q]
 let $tracesCount := count($traces)
@@ -179,13 +173,16 @@ let $tracesCount := count($traces)
 let $cS :=           count($selection)
 let $cV :=           count($verbs//f:*[child::f:match])  
 let $cSn :=           count($selectionN)
-let $cN :=           count($nouns//f:*[child::f:match])      
+let $cN :=           count($nouns//f:*[child::f:match])    
+let $cSp :=           count($selectionP)
+let $cP :=           count($particles//f:*[child::f:match])   
+
 return
-if(($cSn+$cS + $tracesCount) le 0) 
+if(($cSn+$cS + $cSp + $tracesCount) le 0) 
 then  <unknown>unknown</unknown> else 
-(if(($cSn+$cS) le 0) then () else 
+(if(($cSn+$cS+ $cSp) le 0) then () else 
 <word>{
-for $form in ($selection, $selectionN)//f:desinence
+for $form in ($selection, $selectionN, $selectionP)//f:desinence
 let $match := $form/ancestor::f:match
 let $sol := $form/ancestor::f:solution
 return
@@ -295,14 +292,11 @@ let $chars := functx:chars($q)
 let $traces := $morpho:corpus//t:f[.=$q]
 (:particles:)
 let $particles := morpho:particles($q)
-(: verbs       :)
-(:sends 10 queries, one for each schwerer type and one for the regular
-adds also a fuzzy search for eventual 4 or 5 radicals:)
-
 (:nouns      :)
-let $nouns:= morpho:formulas($chars,$q,$transcriptionType,'noun')
+let $nouns:= (morpho:formulas($chars,$q,$transcriptionType,'noun'), if($fuzzy = 'true') then morpho:formulas($chars,$q,$transcriptionType,'fuzzy') else ())
 (:verbs       :)
-let $verbs:= morpho:formulas($chars,$q,$transcriptionType,'verb')
+let $verbs:= (morpho:formulas($chars,$q,$transcriptionType,'verb'), if($fuzzy = 'true') then morpho:formulas($chars,$q,$transcriptionType,'fuzzy') else ())
+
 let $selection := morpho:selection($verbs, $fuzzy, $NoDil, $mismatch)
 let $selectionN := morpho:selection($nouns, $fuzzy, $NoDil, $mismatch)
 let $selectionP := morpho:selection($particles, $fuzzy, $NoDil, $mismatch)
@@ -364,10 +358,12 @@ morpho:selectionmessage($cSn, $cN, $fuzzy, $NoDil, $mismatch),
 <th>Pattern</th>
 <th>Forms</th>
 <th>Link Lexicon</th>
+<th>Declension</th>
 <th>TraCES Corpus</th>
 </thead>
 <tbody>
 {for $noun in $selectionN
+let $MR := $noun//f:mainroots/f:root/text()
 return 
 <tr>
 <td>{$noun//f:pattern/text()}</td>
@@ -376,6 +372,9 @@ return
                               }</td>
 <td>{for $l  in $noun/f:link return 
                 (<a  target="_blank">{$l/@href, $l/text()}</a>,<br/>)}</td>
+                <td><a target="_blank" 
+    href="{$morpho:baseurl}/decl?root={$MR}">{$MR}</a>
+    </td>
                 <td>{for $l  in $noun/f:link 
     let $lex := substring-after($l/@href,'http://betamasaheft.eu/Dillmann/lemma/')
     let $corpusattestations := $morpho:corpus//t:f[@name='lex'][starts-with(.,$lex)]
@@ -559,7 +558,7 @@ return
 </thead>
 <tbody>
 {for $affixes in $modes
-let $form := morpho:conjugatedForm($parsed, $transcriptionType,$affixes, $group, $type)
+let $form := morpho:conjugatedForm($parsed, $transcriptionType,$affixes, $group)
 let $formtext := string-join($form//f:char[not((position() != 1) and (following-sibling::f:firstOrder = parent::f:syllab/following-sibling::f:syllab/f:firstOrder))]/text())
 return
 <tr>
@@ -573,6 +572,72 @@ return
 else ()}
 <td><a target="blank" href="{$morpho:baseurl}/corpus?query={$formtext}&amp;type=string">{ 
 (:the selector in the chars makes sure that gemination is not reproduced in the fidal:)
+$formtext
+}</a></td>
+</tr>
+}
+</tbody>
+</table></div></div>
+</body>
+</html>
+};
+
+
+
+(:~
+ : Given a root, mode, group and type (see conjugation.xml) prints that conjugation of the verb .
+ : To do this the root is parsed without awareness of prefixes and suffixes to the root itself
+ : the result is returned as an HTML page with a table 
+ :)
+declare
+%rest:GET
+%rest:path("/morpho/decl")
+%rest:query-param("root", "{$root}", "")
+%rest:query-param("transcriptionType", "{$transcriptionType}", "BM")
+%output:method("html")
+function morpho:morphoDeclension($root as xs:string*, $transcriptionType as xs:string*){
+let $root :=  util:unescape-uri($root, 'UTF-8')(:identify the correct pattern for the root:)
+let $chars := functx:chars($root)
+let $parsed := morpho:standardGeneric($chars, $root)
+let $match := morpho:chars2pseudotranscription($parsed,$transcriptionType)
+let $group :=if(ends-with($match, 'i')) then 'i' else if (ends-with($match, 'e')) then 'e' else 'consonant'
+let $modes:=  $morpho:nouns//f:affixes[ancestor::f:group[@name=$group]]
+
+return
+<html>
+<head>
+<meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   
+<title>Declension of {$root}
+</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</link>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  
+</head>
+<body>
+<div class="col-md-12"><h1>Morphological Parser (alpha)</h1></div>
+<div class="col-md-12">
+<div class="col-md-3"><div class="col-md-12">{morpho:form()}</div></div>
+<div class="col-md-9">
+<h1>Declension of <a target="_blank" href="{$morpho:baseurl}?query={$root}">{$root}</a></h1>
+<table class="table table-responsive">
+<thead>
+<tr><th>case</th><th>number</th><th>person</th><th>gender</th><th>form</th></tr>
+</thead>
+<tbody>
+{for $affixes in $modes
+let $form := morpho:conjugatedForm($parsed, $transcriptionType,$affixes, $group)
+let $formtext := string-join($form//f:char[not((position() != 1) and (following-sibling::f:firstOrder = parent::f:syllab/following-sibling::f:syllab/f:firstOrder))]/text())
+return
+<tr>
+<td>{string($affixes/ancestor::f:type/@name)}</td>
+<td>{string($affixes/ancestor::f:num/@type)}</td>
+<td>{string($affixes/ancestor::f:person/@type)}</td>
+<td>{string($affixes/ancestor::f:gender/@type)}</td>
+<td><a target="blank" href="{$morpho:baseurl}/corpus?query={$formtext}&amp;type=string">{ 
 $formtext
 }</a></td>
 </tr>
@@ -1346,7 +1411,7 @@ $syllabs
 (:~
  : given a structured parsed string, and the list of affixes in conjugation.xml, builds the selected forms, applying some of the rules in a generic way, so that they can be valid in most cases
  :)
-declare function morpho:conjugatedForm($parsed, $transcriptionType,$affixes, $group, $type){
+declare function morpho:conjugatedForm($parsed, $transcriptionType,$affixes, $group){
 
 let $secondradicalIndex := if ($group = 'IV') then 5 else 2
 let $affixesStruct :=(if($affixes/f:affix[@type='pre']) then ($affixes/f:affix[@type='pre']/text()|| '-' || ' ') else ())|| (if($affixes/f:affix[not(@type)]) then ('-' || string-join($affixes/f:affix[not(@type)]/text(), ' / ')) else ())
@@ -1764,6 +1829,7 @@ let $pronouns := for $cand in $pron
                                                 <type>{string($cand/ancestor::f:type/@name)}</type>
                                                 <forms>
                                                 <desinence>
+                                                <group>pronoun {string($cand/ancestor::f:group/@name)}</group>
                                                 <gender>{string($cand/ancestor::f:gender/@type)}</gender>
                                             <number>{string($cand/ancestor::f:num/@type)}</number>
                                             </desinence>
@@ -1842,3 +1908,5 @@ declare function morpho:form(){
 <button type="submit" class="btn btn-primary">RUN</button>
 </form>
 };
+
+    
