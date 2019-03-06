@@ -75,6 +75,10 @@ declare variable $morpho:conjugations := doc($morpho:data || 'conjugation.xml');
 declare variable $morpho:nouns := doc($morpho:data || 'nounssuffixes.xml');
 declare variable $morpho:nominal := doc($morpho:data || 'nominalforms.xml');
 declare variable $morpho:proclitics := doc($morpho:data || 'proclitics.xml');
+declare variable $morpho:particles := doc($morpho:data || 'particles.xml');
+declare variable $morpho:af := $morpho:particles//f:particle[@position='af'];
+declare variable $morpho:suf := $morpho:particles//f:particle[@position='suf'];
+declare variable $morpho:numbers := doc($morpho:data || 'numbers.xml');
 declare variable $morpho:pronouns := doc($morpho:data || 'pronouns.xml');
 declare variable $morpho:laryngeals := $morpho:letters//f:letter[@type='laryngeal']//f:realization[2]/text();
 declare variable $morpho:laryngealsAll := distinct-values($morpho:letters//f:letter[@type='laryngeal']//f:realization/text());
@@ -83,6 +87,8 @@ declare variable $morpho:dentals := $morpho:letters//f:letter[@type='dental']//f
 declare variable $morpho:yod := $morpho:letters//f:letter[@type='yod']//f:realization[2]/text();
 declare variable $morpho:waw := $morpho:letters//f:letter[@type='waw']//f:realization[2]/text();
 declare variable $morpho:neg := $morpho:letters//f:realization[@type='neg']/text();
+declare variable $morpho:quot := $morpho:letters//f:realization[@type='quot']/text();
+declare variable $morpho:int := $morpho:letters//f:realization[@type='int']/text();
 
 (:~
  : Helper function which makes a string into a sequence of characters.
@@ -460,8 +466,8 @@ function morpho:morphoparser($query as xs:string*, $transcriptionType as xs:stri
 <div class="col-md-9" id="results">{
 if($query ='') then () else
 let $query := morpho:cleanQ($query, $fidal, $transcriptionType)
-let $test0c := console:log(string-join($query, '-'))
-for $q in $query[.!='']
+(:let $test0c := console:log(string-join($query, '-')):)
+for $q at $p in $query[.!='']
 let $q :=replace($q, '\s', '')
 (:let $test0 := console:log($q):)
 order by string-length($q) ascending
@@ -499,6 +505,7 @@ let $cP :=           count($particles//f:*[child::f:match])
 (:let $test5 := console:log($cP):)
 let $tracesCount := count($traces[@name='fidäl'])
 (:let $test6 := console:log($tracesCount):)
+order by $tracesCount descending
 return
 <div class="col-md-12" style="
     margin-bottom: 5mm;
@@ -507,9 +514,9 @@ return
     border-bottom-width: thick;
     border-bottom-color: cadetblue;
 ">
-<div class="col-md-6">{
+<div class="col-md-9">{
 if(($cV+$cN+$cP) lt 1) then (<p class="alert alert-warning">Sorry, no matches for {$q}</p>) else
-(<h2>Morphological parsing of {$q}</h2>,
+(<h2>Morphological parsing of <a href="https://betamasaheft.eu/as.html?query={$q}" target="_blank">{$q}</a></h2>,
 if($cV lt 1) then () else
 (
 if (starts-with($q, $morpho:neg)) then <p>{'Negative form starting with ' || $morpho:neg}</p>else (),
@@ -517,20 +524,30 @@ if (starts-with($q, $morpho:neg)) then <p>{'Negative form starting with ' || $mo
 morpho:selectionmessage($cS, $cV, $fuzzy, $NoDil, $mismatch),
 <table class="table table-responsive">
 <thead>
-<th data-toggle="tooltip" data-placement="top" title="Reconstructed possible Perfect 3 singular masculine">Root</th>
-<th data-toggle="tooltip" data-placement="top" title="Derived verbal forms which can be found in Dillmann for the reconstructed root on the left">Lemma</th>
-<th data-toggle="tooltip" data-placement="top" title="Attestations of forms related to the lemma on the left in the TraCES annotations">TraCES Corpus</th>
 <th data-toggle="tooltip" data-placement="top" title="Verb group and type according to Dillmann. I is the simple form, II the causative, III the reflexive-passive, IV the causative-reflexive; 1 is the simple form, 2 is the intensive, 3 is the iterative; small latin letters represent alternative types of the same form">Type</th>
 <th data-toggle="tooltip" data-placement="top" title="Pattern of the verb form matched">Pattern</th>
 <th data-toggle="tooltip" data-placement="top" title="Tense Aspect Mood">TAM</th>
 <th data-toggle="tooltip" data-placement="top" title="Person Number Gender">PNG</th>
+<th data-toggle="tooltip" data-placement="top" title="Reconstructed possible Perfect 3 singular masculine">Root</th>
+<th data-toggle="tooltip" data-placement="top" title="Derived verbal forms which can be found in Dillmann for the reconstructed root on the left">Lemma</th>
+<th data-toggle="tooltip" data-placement="top" title="Attestations of forms related to the lemma on the left in the TraCES annotations">TraCES Corpus</th>
 </thead>
 <tbody>
 {for $verb in $selection
 let $MR := $verb//f:mainroots/f:root/text()
 return
     <tr>
-    <td>{for $oneMR in $MR return (<a target="_blank" 
+    <td>{if($verb//f:pattern[@attested='no']) then attribute style {'color:red;'} else ()}
+    {string-join($verb//f:solution/f:*[not(name()='mode')]/text(), ' ')}</td>
+    <td>{if($verb//f:pattern[@attested='no']) then attribute style {'color:red;'} else ()}{$verb//f:pattern/text()}</td>
+    
+    <td>{string-join($verb//f:solution/f:mode/text(), ' ')}</td>
+    
+    <td>{for $desinence in $verb//f:solution/f:forms/f:desinence return
+                              (('-'||string-join($desinence/f:*[not(name()='length')][not(name()='mode')]/text(), ' ') || (if($desinence/f:pronouns) then (' with object suffix: ' || string-join($desinence/f:pronouns/f:*[not(name()='length')]/text(), ' ')) else ())),<br/>)
+                              }
+        </td>
+   <td>{for $oneMR in $MR return (<a target="_blank" 
     href="{$morpho:baseurl}/paradigm?root={$oneMR}">{$oneMR}</a>,<br/>)}
     </td>
     <td>{for $l  in $verb/f:link 
@@ -547,17 +564,7 @@ return
     return (<a target="_blank" href="{$morpho:baseurl}/corpus?query={$lex}&amp;type=lemma">{count($corpusattestations)}</a>, <br/>)
     }</td>
     
-    <td>{if($verb//f:pattern[@attested='no']) then attribute style {'color:red;'} else ()}
-    {string-join($verb//f:solution/f:*[not(name()='mode')]/text(), ' ')}</td>
-    <td>{if($verb//f:pattern[@attested='no']) then attribute style {'color:red;'} else ()}{$verb//f:pattern/text()}</td>
-    
-    <td>{string-join($verb//f:solution/f:mode/text(), ' ')}</td>
-    
-    <td>{for $desinence in $verb//f:solution/f:forms/f:desinence return
-                              (('-'||string-join($desinence/f:*[not(name()='length')][not(name()='mode')]/text(), ' ') || (if($desinence/f:pronouns) then (' with object suffix: ' || string-join($desinence/f:pronouns/f:*[not(name()='length')]/text(), ' ')) else ())),<br/>)
-                              }
-        </td>
-    
+     
     </tr>
     }</tbody></table>)
      ,
@@ -567,7 +574,6 @@ return
 morpho:selectionmessage($cSn, $cN, $fuzzy, $NoDil, $mismatch),
     <table class="table table-responsive">
 <thead>
-<th>Declension</th>
 <th>Pattern</th>
 <th>Forms</th>
 <th>Link Lexicon</th>
@@ -577,15 +583,16 @@ morpho:selectionmessage($cSn, $cN, $fuzzy, $NoDil, $mismatch),
 {for $noun in $selectionN
 let $MR := $noun//f:mainroots/f:root/text()
 return 
-<tr><td><a target="_blank" 
-    href="{$morpho:baseurl}/decl?root={$MR}">{$MR}</a>
-    </td>
+<tr>
 <td>{$noun//f:pattern/text()}</td>
 <td>{for $desinence in $noun//f:solution/f:forms/f:desinence return
                               (('-'||string-join($desinence/f:*[not(name()='length')]/text(), ' ')),<br/>)
                               }</td>
-<td>{for $l  in $noun/f:link return 
-                (<a  target="_blank">{$l/@href, $l/text()}</a>,<br/>)}</td>
+<td>{for $l  in $noun/f:link 
+              group by $L := $l/@href
+                return 
+                (<a  target="_blank">{$L, string-join(distinct-values($l/text()), ', ')}</a>,<a target="_blank" 
+    href="{$morpho:baseurl}/decl?root={$MR}"> [decl]</a>,<br/>)}</td>
                 
                 <td>{for $l  in $noun/f:link 
     let $lex := substring-after($l/@href,'https://betamasaheft.eu/Dillmann/lemma/')
@@ -626,22 +633,23 @@ return
     }</tbody>
     </table>)
     )}</div>
-   <div class="col-md-6">{ if($tracesCount gt 0) then (<h3>TraCES annotations of {$q}</h3>,<p class="alert alert-dismissible alert-info">This word appears in this form in the TraCES corpus <a target="_blank" class="btn btn-primary" href="{$morpho:baseurl}/corpus?query={$q}&amp;type=string">{$tracesCount}</a> times.</p>)
+   <div class="col-md-3">{ if($tracesCount gt 0) then (<h3>TraCES annotations of {$q}</h3>,<p class="alert alert-dismissible alert-info">This word appears in this form in the TraCES corpus <a target="_blank" class="btn btn-primary" href="{$morpho:baseurl}/corpus?query={$q}&amp;type=string">{$tracesCount}</a> times.</p>)
 else (<div class="alert alert-dismissible alert-info">No occurrences of this word in this form in TraCES corpus. To see if the lemma is attested in other forms, you might click one of the options in the table, in the TraCES Corpus column. <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">close</span>
   </button></div>)
   }
-  <div>
   
-  <h3>Attestations of <span id="lemma">{$q}</span> in the <a href="/">Beta maṣāḥǝft</a> corpus</h3>
-  <div id="attestations" style="max-height: 400px; overflow: auto;"/>
-  <script type="text/javascript" src="https://betamasaheft.eu/Dillmann/resources/js/attestations.js"></script>
-  </div>
   </div>
 </div>}
     </div>
     </div>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.js"></script>
+<div class="col-md-12">
+  
+  <h3>Attestations of <span id="lemma">{$query}</span> in the <a href="/">Beta maṣāḥǝft</a> corpus</h3>
+  <div id="attestations" style="max-height: 400px; overflow: auto;"/>
+  <script type="text/javascript" src="https://betamasaheft.eu/Dillmann/resources/js/attestations.js"></script>
+  </div>  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.js"></script>
     </body>
 </html>
 };
@@ -978,7 +986,7 @@ return
 <div class="col-md-12">
 <div class="col-md-3">{if($formula/@attested)then attribute style {'color:red;'}else ()}{$formula/text()} {if($formula/@type) then ' ('||string($formula/@type)||')' else ()}</div>
 <div class="col-md-3">{string($formula/parent::f:pattern/@name)}</div>
-<div class="col-md-3">{string($formula/ancestor::f:type/@name)}{' '}{string($formula/ancestor::f:group/@name)}</div>
+<div class="col-md-3">{string($formula/ancestor::f:group/@name)}{', '}{string($formula/ancestor::f:type/@name)}</div>
 <div class="col-md-3">{string($formula/ancestor::f:pos/@name)}</div>
 </div>
 }
@@ -1216,7 +1224,7 @@ declare function morpho:cleanQ($query, $fidal, $transcriptionType){
 let $query:= util:unescape-uri($query, 'UTF-8')
 (:check if it is really fidal:)
 let $query := if ($fidal = 'false' or (not(matches($query, '\p{IsEthiopic}')))) 
-                            then try{morpho:transcription2fidal($query, $transcriptionType)} 
+                            then try{morpho:transcription2fidal(lower-case($query), $transcriptionType)} 
                                         catch*{$err:description} 
                            else $query
 (:splits proclitics:)
@@ -1227,6 +1235,30 @@ let $query := for $proclitic in ($morpho:proclitics, $morpho:pronouns)//f:procli
 (:remove negation:)
 let $query := for $q in $query return 
                             if (starts-with($q, $morpho:neg)) then ($morpho:neg, $q, substring-after($q, $morpho:neg)) else $q
+(:split quotative particle :)
+let $query := for $q in $query return 
+                            if (ends-with($q, $morpho:quot)) then (substring-before($q, $morpho:quot), $morpho:quot, $q) else $q
+(:split interrogative particle :)
+let $query := for $q in $query return 
+                            if (ends-with($q, $morpho:int)) then (substring-before($q, $morpho:int), $morpho:int, $q) else $q
+(:split particles suf :)
+let $query := for $q in $query 
+                            for $s in $morpho:suf
+                             return 
+                            if (ends-with($q, $s)) then (substring-before($q, $s), $s, $q) else $q
+(:split particles af :)
+let $query := for $q in $query
+                            for $a in $morpho:af
+                                return
+                            if (starts-with($q, $a)) then (substring-after($q, $a), $a, $q) else $q
+(:split numbers :)
+let $query := for $q in $query
+                            for $n in $morpho:numbers
+                                return
+                            if (starts-with($q, $n)) then (substring-after($q, $n), $n, $q)
+                            else if (ends-with($q, $n)) then (substring-before($q, $n), $n, $q)  
+                            else $q
+
 
 let $query :=  for $q in $query return 
                             if (ends-with($q, '፡')) then (substring-before($q, '፡')) else $q
@@ -1725,7 +1757,7 @@ let $verbtypes:= <verbtypes xmlns="http://fidal.parser">
                                                                       </verbtypes>
 let $candidates:=  if(count($matchings) ge 1) then 
                                     for $match in $matchings
-                                    for $verbtype in $verbtypes/f:type/text()
+                                    let $verbtype := if ($match/@type) then string($match/@type) else 'regular'
                                     (:    once the pattern is known, and thus for every matched pattern, the root can be computed, by looking at the pos and for verbs at the third person masculin singular  of the perfect  :) 
                                      let $typ := string($match/parent::f:pattern/parent::f:type/@name)
                                      let $type := if($typ = '2' or $typ = '3') then '1a' else $typ
@@ -1777,14 +1809,19 @@ let $candidates:=  if(count($matchings) ge 1) then
 declare function morpho:matchesNouns($allformulas, $transcriptionType,$consVowl, $maintype, $possibleDesinences){
 for $f in distinct-values($allformulas)
 let $matchings := if($maintype = 'fuzzy') then (let $fuzzy := concat($f,'~0.8') return $morpho:nominal//f:formula[ft:query(., $fuzzy)]) else $morpho:nominal//f:formula[. = $f]
+
  let $candidates:=  if(count($matchings) ge 1) then 
-                                    for $match in $matchings
+
+                                    for $match in $matchings 
                                     let $matchType := if(ends-with($match, 'i')) then 'i' else if (ends-with($match, 'e')) then 'e' else 'consonant'
                                     (:    once the pattern is known, and thus for every matched pattern, the root can be computed, by looking at the pos and for verbs at the third person masculin singular  of the perfect  :) 
                                      let $patterntype := if($match/@type) then string($match/@type) else 'regular'
                                     let $mainRoot := string-join($consVowl//f:char[number(following-sibling::f:position) le 3]/text())
+                                    let $secondpositionsixthorder := $morpho:letters//f:realization[. = $consVowl//f:syllab[2]/f:firstOrder/text()]/parent::f:realizations/f:realization[1]
                                     let $thirdpositionsixthorder := $morpho:letters//f:realization[. = $consVowl//f:syllab[3]/f:firstOrder/text()]/parent::f:realizations/f:realization[1]
                                     let $lastSixth := string-join(($consVowl//f:char[number(following-sibling::f:position) le 2]/text(),$thirdpositionsixthorder))
+                                    let $lastSixth2 := string-join(($consVowl//f:syllab[number(following-sibling::f:*[1]//f:position) le 3]/f:firstOrder/text(),$thirdpositionsixthorder))
+                                    let $lastSixthandSecondlast := string-join(($consVowl//f:syllab[number(.//f:position) =1]/f:firstOrder/text(),$secondpositionsixthorder,$thirdpositionsixthorder))
                                     let $otherRoot:=string-join($consVowl//f:char/text())
                                     let $optionWithoutlast := substring($otherRoot, 0, string-length($otherRoot))
                                      let $roottype := morpho:rootType($mainRoot)
@@ -1814,6 +1851,8 @@ let $matchings := if($maintype = 'fuzzy') then (let $fuzzy := concat($f,'~0.8') 
                                              <root>{$otherRoot}</root>
                                              <root>{$optionWithoutlast}</root>
                                              <root>{$lastSixth}</root>
+                                             <root>{$lastSixth2}</root>
+                                             <root>{$lastSixthandSecondlast}</root>
                                              </otherroots>
                                              </roots>
                                              </match>
@@ -2397,7 +2436,9 @@ string-join($syllabs)
 
 declare function morpho:particles($fidal){
 let $pron := $morpho:pronouns//f:*[.=$fidal]
-let $partic := $morpho:proclitics//f:proclitic[.=$fidal]
+let $procl := $morpho:proclitics//f:proclitic[.=$fidal]
+let $partic := $morpho:particles//f:particle[.=$fidal]
+let $nums := $morpho:numbers//f:num[.=$fidal]
 let $pronouns := for $cand in $pron 
                                     let $root := $cand/ancestor::f:group/f:type[@name='nominative']/f:num[@type='Singular']/f:gender[@type='Masculine']/f:full
                                    return
@@ -2416,7 +2457,7 @@ let $pronouns := for $cand in $pron
                                              </solution>
                                              <roots><mainroots><root>{$root/text()}</root></mainroots></roots>
                                              </match>
-let $particles := for $cand in $partic 
+let $proclitics := for $cand in $procl 
                                     let $root := $cand
                                     return
                                     <match xmlns="http://fidal.parser">
@@ -2435,8 +2476,52 @@ let $particles := for $cand in $partic
                                              </solution>
                                              <roots><mainroots><root>{$morpho:neg}</root></mainroots></roots>
                                              </match>
-                                             else ()
- let $candidates := ($negative, $pronouns, $particles)                                            
+                                            else ()
+ let $quotative := if($fidal = $morpho:quot) then 
+                                    <match xmlns="http://fidal.parser">
+                                             <solution>
+                                                <pos>quotatitive particle</pos>
+                                                <type>quotative</type>
+                                                
+                                             </solution>
+                                             <roots><mainroots><root>{$morpho:quot}</root></mainroots></roots>
+                                             </match> 
+                                             else()
+ let $interrogatives := for $i in $morpho:int 
+                                     return if($fidal = $i) then 
+                                    <match xmlns="http://fidal.parser">
+                                             <solution>
+                                                <pos>interrrogative particle</pos>
+                                                <type>interrogative</type>
+                                                
+                                             </solution>
+                                             <roots><mainroots><root>{$i}</root></mainroots></roots>
+                                             </match> 
+                                             else()
+ let $particles := for $i in $partic 
+                                     return if($fidal = $i) then 
+                                    <match xmlns="http://fidal.parser">
+                                             <solution>
+                                                <pos>particle</pos>
+                                                <type>{string($i/@type)}</type>
+                                                
+                                             </solution>
+                                             <roots><mainroots><root>{$i/text()}</root></mainroots></roots>
+                                             </match> 
+                                             else()
+                                             
+let $numbers := for $n in $nums
+                                     return if($fidal = $n) then 
+                                    <match xmlns="http://fidal.parser">
+                                             <solution>
+                                                <pos>numeral</pos>
+                                                <type>{string($n/@val)}</type>
+                                                
+                                             </solution>
+                                             <roots><mainroots><root>{$n/text()}</root></mainroots></roots>
+                                             </match> 
+                                             else()
+ let $candidates := ($negative, $quotative, $pronouns, $proclitics, $interrogatives, $particles)                                            
  for $cand in $candidates return 
  <patternOk xmlns="http://fidal.parser">{morpho:checkDill($cand)}</patternOk>               
                                              
@@ -2500,7 +2585,7 @@ declare function morpho:form(){
 <p>The code running here is available in the <a target="_blank" href="https://github.com/TraCES-Lexicon/lexicon/tree/master/geezParser">project GitHub repository</a> and was developed by Pietro Liuzzo.</p>
 <p>The application runs as a <a target="_blank" href="http://www.adamretter.org.uk/papers/restful-xquery_january-2012.pdf">RESTXQ</a> application and is powered by <a herf="http://exist-db.org/exist/apps/homepage/index.html">eXist-db</a>.</p>
 <p>You can query this parser also using <a href="http://alpheios.net/" target="_blank">Alpheios</a>, on any Gǝʿǝz text you can see with a browser.</p>
-<a class="btn btn-secondary" href="javascript:void(0);" onclick="startIntroHome();">Take a tour of this page</a>
+<a class="btn btn-primary" href="javascript:void(0);" onclick="startIntroHome();">Take a tour of this page</a>
         <script type="text/javascript">
         {"function startIntroHome(){
         var intro = introJs();
@@ -2532,6 +2617,11 @@ declare function morpho:form(){
                 element: '#results',
                 intro: 'Results from the above search will be shown here. The query string is first split in parts, each is then passed to parser and shown separated by a dotted line. For each of these you will have two main areas, on the left the results of the morphological parsing on the string, on the right attestations in the TraCES corpus (which also have morphological annotations) and attestations of the string as you see it, unaware of morphology or semantics from the  Beta maṣāḥǝft corpus.',
                 position: 'bottom '
+              },
+              {
+                element: '#attestations',
+                intro: 'When you search, we will look also in the  Beta maṣāḥǝft corpus for attestations of the string you are looking for.',
+                position: 'top '
               }
             ]
           }).setOption('showProgress', true)

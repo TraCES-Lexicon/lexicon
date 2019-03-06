@@ -82,7 +82,7 @@
         <realizations>
             <realization>ህ</realization>
             <realization>ሀ</realization>
-            <realization>ሁ</realization>
+            <realization type="int">ሁ</realization>
             <realization>ሂ</realization>
             <realization>ሃ</realization>
             <realization>ሄ</realization>
@@ -225,7 +225,7 @@
         <realizations>
             <realization>ን</realization>
             <realization>ነ</realization>
-            <realization>ኑ</realization>
+            <realization type="int">ኑ</realization>
             <realization>ኒ</realization>
             <realization>ና</realization>
             <realization>ኔ</realization>
@@ -237,7 +237,7 @@
         <transcription>ʾ</transcription>
         <realizations>
             <realization>እ</realization>
-            <realization>አ</realization>
+            <realization type="quot">አ</realization>
             <realization>ኡ</realization>
             <realization type="neg">ኢ</realization>
             <realization>ኣ</realization>
