@@ -7,10 +7,13 @@ import module namespace console = "http://exist-db.org/xquery/console";
  : XQuery endpoint to parse requests for Geez parsing, paradigms and conjugations. 
  : includes html view with form and 
  : XML response for parsing query
+ :
+ : the imported substitutions module, performs string replacements for homophones.
+ :
  : ONLY DEALS WITH 3 radicals VERBS.
  :
  : all XML data processing is in the http://fidal.parser namespace
- : requires 8 XML files to run, whose locations can be set in the global variables:
+ : requires 10 XML files to run, whose locations can be set in the global variables:
  :   - letters.xml which contains a list of letters in the fidal and of transcriptions. it includes a empty order for non realized sixth order
  :   - patterns.xml which contains all possible patterns for verb formation, taken from the tables submitted by VITAGRAZIA PISANI and  MAGDALENA KRZYŻANOWSKA
  :   - lemmas.xml which contains an extraction of the lemmas in the Online Dillmann Lexicon Lingua Aethiopicae
@@ -19,6 +22,8 @@ import module namespace console = "http://exist-db.org/xquery/console";
  :   - nounssuffixes.xml which contains all distinctive affixes organized by type, number, person, gender as in the tables provided by  VITAGRAZIA PISANI and  MAGDALENA KRZYŻANOWSKA
  :   - pronouns.xml which contains a  list of pronouns
  :   - proclitics.xml which contains a list of proclitic particles
+ :   - numbers.xml which contains a list of numbers
+ :   - particles.xml which contains a list of other particles
  : 
  : the principle is that each given string is transformed into a structured XML fragment which has all the needed information about each letter in the fidal form investigated.
  : this is firstly mildly transliterated to catch possible desinences, and then transformed into candidate patterns. 
@@ -35,8 +40,8 @@ import module namespace console = "http://exist-db.org/xquery/console";
  : https://www.betamasaheft.uni-hamburg.de/
  : 
  : @author Pietro Maria Liuzzo
- : @version 0.4 
- : @date 2019-02-25
+ : @version 0.5 
+ : @date 2019-03-06
 
  :  Geez parser is free software: you can redistribute it and/or modify
  : it under the terms of the GNU General Public License as published by
