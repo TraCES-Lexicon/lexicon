@@ -1,7 +1,7 @@
 <pronouns xmlns="http://fidal.parser">
     <group name="demonstrative">
         <type name="nominative">
-            <num type="Singular">
+        <num type="Singular">
                 <gender type="Masculine">
                     <proclitic>ዝ</proclitic>
                     <full>ዝንቱ</full>
@@ -10,9 +10,9 @@
                     <proclitic>ዛ</proclitic>
                     <full>ዛቲ</full>
                 </gender>
-            </num>
-            <num type="Plural">
-                
+        </num>
+        <num type="Plural">
+            
                 <gender type="Masculine">
                     <full>እሉ</full>
                     <full>እሎንቱ</full>
@@ -21,9 +21,9 @@
                     <full>እላ</full>
                     <full>እላንቱ</full>
                 </gender>
-                
-            </num>
-        </type>
+            
+        </num>
+    </type>
         <type name="akkusative">
             <num type="Singular">
                 <gender type="Masculine">
@@ -61,9 +61,7 @@
                 </gender>
             </num>
             <num type="Plural">
-                <gender type="Common">
                 <full>እለ</full>
-                </gender>
             </num>
         </type>
         <type name="accusative">
@@ -76,9 +74,7 @@
                 </gender>
             </num>
             <num type="Plural">
-                <gender type="Common">
-                    <full>እለ</full>
-                </gender>
+                <full>እለ</full>
             </num>
         </type>
         <type name="genitive">
@@ -91,9 +87,7 @@
                 </gender>
             </num>
             <num type="Plural">
-                <gender type="Common">
                 <full>ዘእለ</full>
-                </gender>
             </num>
         </type>
     </group>

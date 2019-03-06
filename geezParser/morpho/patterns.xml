@@ -39,8 +39,8 @@
                 <pattern name="Subjunctive">
                     <formula>yǝ12ǝ3</formula>
                     <formula type="w1">yǝ2a3</formula>
-                    <formula type="w1">yǝW2ǝ3</formula>
-                    <formula type="w1">yǝ2ǝ3</formula>
+<!--                    <formula type="w1">yǝW2ǝ3</formula>
+                    <formula type="w1">yǝ2ǝ3</formula>-->
                     <formula type="w2">yǝ1Wa3</formula>
                     <formula type="w3">yǝ12u</formula>
 
@@ -56,13 +56,13 @@
                 <pattern name="Imperative">
                     <formula>1ǝ2ǝ3</formula>
                     <formula type="w1">2a3</formula>
-                    <formula type="w1">Wǝ2ǝ3</formula>
-                    <formula type="w1">2ǝ3</formula>
+                   <!-- <formula type="w1">Wǝ2ǝ3</formula>
+                    <formula type="w1">2ǝ3</formula>-->
                     <formula type="w2">1Wa3</formula>
                     <formula type="w3">1ǝ2u</formula>
                     <formula type="y1">Yǝ2a3</formula>
                     <formula type="y2">1ǝYa3</formula>
-
+                    <formula type="y3">1ǝ2i</formula>
                     <formula type="l1">Lǝ2ǝ3</formula>
                     <formula type="l2">1aLa3</formula>
                     <formula type="l3">1ǝ2āL</formula>
@@ -115,6 +115,7 @@
                 <pattern name="Perfect">
                     <formula>1a23a</formula>
                     <formula type="w1">Wa23a</formula>
+                    <formula type="w1">Wa2a3a</formula>
                     <formula type="w2">1o3a</formula>
                     <formula type="w2">1aW3a</formula>
                     <formula type="w3">1a2Wa</formula>
@@ -142,7 +143,7 @@
                 <pattern name="Subjunctive">
                     <formula>yǝ12a3</formula>
                     <formula type="w1">yǝ2a3</formula>
-                    <formula type="w1">yǝW2a3</formula>
+<!--                    <formula type="w1">yǝW2a3</formula>-->
                     <formula type="w2">yǝ1u3</formula>
                     <formula type="w2">yǝ1o3</formula>
                     <formula type="w2">yǝ1ǝ3</formula>
@@ -160,7 +161,7 @@
                 <pattern name="Imperative">
                     <formula>1ǝ2a3</formula>
                     <formula type="w1">2a3</formula>
-                    <formula type="w1">Wǝ2a3</formula>
+<!--                    <formula type="w1">Wǝ2a3</formula>-->
                     <formula type="w2">1u3</formula>
                     <formula type="w2">1o3</formula>
                     <formula type="w2">1ǝ3</formula>
@@ -216,6 +217,7 @@
             <type name="1c">
                 <pattern name="Perfect">
                     <formula>1a23a</formula>
+                    <formula type="w1">Wa2a3a</formula>
                     <formula type="w2">1oLa</formula>
                     <formula type="w3">La2aWa</formula>
                     <formula type="y2">LaYWa</formula>
@@ -229,6 +231,7 @@
                 </pattern>
                 <pattern name="Imperfect">
                     <formula>yǝ1a22ǝ3</formula>
+                    <formula type="w1">yǝWa22ǝ3</formula>
                     <formula type="w2">yǝ1aWWǝL</formula>
                     <formula type="w3">yaLa22u</formula>
                     <formula attested="no" type="w3">yǝ1a22u</formula>
@@ -240,6 +243,9 @@
                 </pattern>
                 <pattern name="Subjunctive">
                     <formula>yǝ12a3</formula>
+                    <formula type="w1">yǝW2ǝ3</formula>
+                    <formula type="w1">yǝ2a3</formula>
+                    <formula type="w1">yǝ2ǝ3</formula>
                     <formula type="w2">yǝ1āL</formula>
                     <formula type="w2">yǝ1uL</formula>
                     <formula type="w3">yǝL2u</formula>
@@ -255,6 +261,9 @@
                 </pattern>
                 <pattern name="Imperative">
                     <formula>1ǝ2a3</formula>
+                    <formula type="w1">Wǝ2ǝ3</formula>
+                    <formula type="w1">2a3</formula>
+                    <formula type="w1">2ǝ3</formula>
                     <formula type="w2">1āL</formula>
                     <formula type="w2">1uL</formula>
                     <formula type="w3">Lǝ2u</formula>
@@ -270,6 +279,7 @@
                 </pattern>
                 <pattern name="Gerundive">
                     <formula>1a2i3o</formula>
+                    <formula type="w1">Wa2i3o</formula>
                     <formula type="w2">1aWiLo</formula>
                     <formula type="w3">La2iWo</formula>
                     <formula attested="no" type="w3">1a2iWo</formula>
@@ -283,6 +293,8 @@
                 <pattern name="Infinitive">
                     <formula>1a2i3</formula>
                     <formula>1a2i3ot</formula>
+                    <formula type="w1">Wa2i3</formula>
+                    <formula type="w1">Wa2i3ot</formula>
                     <formula type="w2">1aWiL</formula>
                     <formula type="w2">1aWiLot</formula>
                     <formula type="w3">La2iW</formula>
@@ -305,6 +317,7 @@
             <type name="1d">
                 <pattern name="Perfect">
                     <formula>1a23a</formula>
+                    <formula type="w1">Wa2a3a</formula>
                     <formula type="w2">1aWaYa</formula>
                     <formula type="w2" attested="no">1aWa3a</formula>
                     <formula type="w2">1aWYa</formula>
@@ -313,24 +326,30 @@
                 </pattern>
                 <pattern name="Imperfect">
                     <formula>yǝ1a22ǝ3</formula>
+                    <formula type="w1">yǝWa22ǝ3</formula>
                     <formula type="w2">yǝ1aWWǝY</formula>
                     <formula type="w2" attested="no">yǝ1aWWǝ3</formula>
                     <solution>I,1d Imperf. 3 m. sg.</solution>
                 </pattern>
                 <pattern name="Subjunctive">
                     <formula>yǝ12a3</formula>
+                    <formula type="w1">yǝW2ǝ3</formula>
+                    <formula type="w1">yǝW2a3</formula>
                     <formula type="w2">yǝ1āL</formula>
                     <formula type="w2" attested="no">1aWa3a</formula>
                     <solution>I,1d Subj. 3 m. sg.</solution>
                 </pattern>
                 <pattern name="Imperative">
                     <formula>1ǝ2a3</formula>
+                    <formula type="w1">Wǝ2ǝ3</formula>
+                    <formula type="w1">Wǝ2a3</formula>
                     <formula type="w2">1ǝWaY</formula>
                     <formula type="w2" attested="no">1Wa3</formula>
                     <solution>I,1d Impera. 2 m. sg.</solution>
                 </pattern>
                 <pattern name="Gerundive">
                     <formula>1a2i3o</formula>
+                    <formula type="w1">Wa2i3o</formula>
                     <formula type="w2">1aWiYo</formula>
                     <formula type="w2" attested="no">1aWi3o</formula>
                     <solution>I,1d Gerund. 3 m. sg.</solution>
@@ -338,6 +357,8 @@
                 <pattern name="Infinitive">
                     <formula>1a2i3</formula>
                     <formula>1a2i3ot</formula>
+                    <formula type="w1">Wa2i3</formula>
+                    <formula type="w1">Wa2i3ot</formula>
                     <formula type="w2">1aWiY</formula>
                     <formula type="w2">1aWiYot</formula>
                     <formula type="w2" attested="no">1aWi3</formula>
@@ -555,8 +576,8 @@
         </group>
         <group name="II">
             <type name="1a">
-                <pattern>
-                    <formula name="Perfect">ʾa12a3a</formula>
+                <pattern name="Perfect">
+                    <formula>ʾa12a3a</formula>
                     <formula type="w1">ʾaW2a3a</formula>
                     <formula type="w2">ʾa1o3a</formula>
                     <formula type="w2">ʾa1a3a</formula>

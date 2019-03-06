@@ -1,4 +1,5 @@
 <declension xmlns="http://fidal.parser">
+    
     <group name="consonant">
     <type name="nominative">
         <num type="Singular">
