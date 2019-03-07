@@ -1,0 +1,4 @@
+<package xmlns="http://expath.org/ns/pkg" name="http://betamasaheft.aai.uni-hamburg.de/parser/" abbrev="parser" version="0.5" spec="1.0">
+    <title>Gǝʿǝz Morphological Parser</title>
+    <dependency package="http://exist-db.org/apps/shared"/>
+</package>
